@@ -53,10 +53,8 @@ pipeline{
         stage("Docker Build & Push"){
             steps{
                 script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
                        sh "docker build -t sankar0812/swiggy-app:${env.BUILD_NUMBER} ."
                        sh "docker push sankar0812/swiggy-app:${env.BUILD_NUMBER} "
-                    }
                 }
             }
         }
