@@ -53,8 +53,8 @@ pipeline{
         stage("Docker Build & Push"){
             steps{
                 script{
-                       sh "docker build -t sankar0812/swiggy-app:${env.BUILD_NUMBER} ."
-                       sh "docker push sankar0812/swiggy-app:${env.BUILD_NUMBER} "
+                       sh "docker build -t ideauxhub/swiggy-app:${env.BUILD_NUMBER} ."
+                       sh "docker push ideauxhub/swiggy-app:${env.BUILD_NUMBER} "
                 }
             }
         }
