@@ -16,7 +16,7 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/sankar0812/swiggy-app-github-actions.git'
+                git branch: 'master', url: 'https://github.com/sankar0812/swiggy-app-github-actions.git'
             }
         }
         stage("Sonarqube Analysis "){
