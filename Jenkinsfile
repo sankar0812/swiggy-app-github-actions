@@ -50,14 +50,21 @@ pipeline{
         //         sh "trivy fs . > trivyfs.txt"
         //     }
         // }
+        stage('Log in to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    }
+                }
+            }
+        }
         stage("Docker Build & Push"){
             steps{
                 script{
-                      withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                         sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                         sh "docker build -t ideauxhub/swiggy-app:${env.BUILD_NUMBER} ."
-                         sh "docker push ideauxhub/swiggy-app:${env.BUILD_NUMBER}"
-                      }
+                    sh "docker build -t ideauxhub/swiggy-app:${env.BUILD_NUMBER} ."
+                    sh "docker push ideauxhub/swiggy-app:${env.BUILD_NUMBER}"
+                
                 }
             }
         }
