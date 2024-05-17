@@ -60,7 +60,7 @@ pipeline{
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image sankar0812/swiggy-app:${env.BUILD_NUMBER} > trivyimage.txt" 
+                sh "trivy image ideauxhub/swiggy-app:${env.BUILD_NUMBER} > trivyimage.txt" 
             }
         }
         stage('Deploy with Ansible') {
