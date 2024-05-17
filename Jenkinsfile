@@ -50,26 +50,28 @@ pipeline{
         //         sh "trivy fs . > trivyfs.txt"
         //     }
         // }
-        // stage("Docker Build & Push"){
-        //     steps{
-        //         script{
-        //            withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
-        //                sh "docker build --build-arg TMDB_V3_API_KEY=https://api.themoviedb.org/3 -t netflix ."
-        //                sh "docker tag netflix sankar0812/netflix:latest "
-        //                sh "docker push sankar0812/netflix:latest "
-        //             }
-        //         }
-        //     }
-        // }
-        // stage("TRIVY"){
-        //     steps{
-        //         sh "trivy image sankar0812/netflix:latest > trivyimage.txt" 
-        //     }
-        // }
-        stage('Debug SSH Connection') {
+        stage("Docker Build & Push"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
+                       sh "docker build -t sankar0812/swiggy-app:${env.BUILD_NUMBER} ."
+                       sh "docker push sankar0812/swiggy-app:${env.BUILD_NUMBER} "
+                    }
+                }
+            }
+        }
+        stage("TRIVY"){
+            steps{
+                sh "trivy image sankar0812/swiggy-app:${env.BUILD_NUMBER} > trivyimage.txt" 
+            }
+        }
+        stage('Deploy with Ansible') {
            steps {
                script {
-                  ansiblePlaybook credentialsId: 'ubuntu-server', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/etc/ansible/deploy.yml', vaultTmpPath: ''
+                  ansiblePlaybook credentialsId: 'ubuntu-server', 
+                      disableHostKeyChecking: true, installation: 'ansible', 
+                      inventory: '/etc/ansible/hosts', playbook: '/etc/ansible/deploy.yml', vaultTmpPath: '',
+                      extraVars: [ build_number: "${env.BUILD_NUMBER}" ]
                }
            }
         }
